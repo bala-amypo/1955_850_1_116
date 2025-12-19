@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 
 
 @Entity
-public class StuEnt {
+public class Contract {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
