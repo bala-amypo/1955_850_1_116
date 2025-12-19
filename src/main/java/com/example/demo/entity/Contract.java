@@ -16,7 +16,8 @@ public class Contract {
     private String title;
     private String counterpartyName;
     private Date agreedDeliveryDate;
-    private BigD
+    private BigDecimal baseContractValue;
+    private String status
 
     public StuEnt(Long id, String name, String email, float cgpa) {
         this.id = id;
