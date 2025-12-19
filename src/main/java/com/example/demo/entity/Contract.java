@@ -14,7 +14,9 @@ public class Contract {
     private Long id;
     private String contractNumber;
     private String title;
-    private float cgpa;
+    private String counterpartyName;
+    private Date agreedDeliveryDate;
+    private BigD
 
     public StuEnt(Long id, String name, String email, float cgpa) {
         this.id = id;
