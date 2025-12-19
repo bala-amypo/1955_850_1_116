@@ -12,8 +12,8 @@ public class Contract {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String email;
+    private String contractNumber;
+    private String title;
     private float cgpa;
 
     public StuEnt(Long id, String name, String email, float cgpa) {
