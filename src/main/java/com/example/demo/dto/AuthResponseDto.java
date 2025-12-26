@@ -1,42 +1,42 @@
-package com.example.demo.dto;
+// package com.example.demo.dto;
 
-public class AuthResponseDto {
-    private String token;
-    private Long userId;
-    private String email;
-    private String role;
+// public class AuthResponseDto {
+//     private String token;
+//     private Long userId;
+//     private String email;
+//     private String role;
     
-    public AuthResponseDto() {}
+//     public AuthResponseDto() {}
     
-    public String getToken() {
-        return token;
-    }
+//     public String getToken() {
+//         return token;
+//     }
     
-    public void setToken(String token) {
-        this.token = token;
-    }
+//     public void setToken(String token) {
+//         this.token = token;
+//     }
     
-    public Long getUserId() {
-        return userId;
-    }
+//     public Long getUserId() {
+//         return userId;
+//     }
     
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
+//     public void setUserId(Long userId) {
+//         this.userId = userId;
+//     }
     
-    public String getEmail() {
-        return email;
-    }
+//     public String getEmail() {
+//         return email;
+//     }
     
-    public void setEmail(String email) {
-        this.email = email;
-    }
+//     public void setEmail(String email) {
+//         this.email = email;
+//     }
     
-    public String getRole() {
-        return role;
-    }
+//     public String getRole() {
+//         return role;
+//     }
     
-    public void setRole(String role) {
-        this.role = role;
-    }
-}
+//     public void setRole(String role) {
+//         this.role = role;
+//     }
+// }
