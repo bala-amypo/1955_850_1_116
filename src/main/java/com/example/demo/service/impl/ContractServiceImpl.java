@@ -2,7 +2,6 @@ package com.example.demo.service.impl;
 
 import com.example.demo.entity.Contract;
 import com.example.demo.entity.ContractStatus;
-import com.example.demo.entity.DeliveryRecord;
 import com.example.demo.repository.ContractRepository;
 import com.example.demo.repository.DeliveryRecordRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +13,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ContractServiceImpl {
+
     private final ContractRepository contractRepository;
     private final DeliveryRecordRepository deliveryRecordRepository;
 
@@ -26,7 +26,7 @@ public class ContractServiceImpl {
 
     public Contract getContractById(Long id) {
         return contractRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Contract not found: " + id));
+                .orElseThrow(() -> new RuntimeException("Contract not found: " + id));
     }
 
     public Contract updateContract(Long id, Contract updated) {
@@ -40,10 +40,13 @@ public class ContractServiceImpl {
 
     public void updateContractStatus(Long contractId) {
         Contract contract = getContractById(contractId);
-        var latestDelivery = deliveryRecordRepository.findFirstByContractIdOrderByDeliveryDateDesc(contractId);
+        var latestDelivery =
+                deliveryRecordRepository.findFirstByContractIdOrderByDeliveryDateDesc(contractId);
+
         if (latestDelivery.isEmpty()) {
             contract.setStatus(ContractStatus.ACTIVE);
-        } else if (latestDelivery.get().getDeliveryDate().isAfter(contract.getAgreedDeliveryDate())) {
+        } else if (latestDelivery.get().getDeliveryDate()
+                .isAfter(contract.getAgreedDeliveryDate())) {
             contract.setStatus(ContractStatus.BREACHED);
         }
         contractRepository.save(contract);
