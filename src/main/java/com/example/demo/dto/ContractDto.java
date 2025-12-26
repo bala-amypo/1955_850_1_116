@@ -11,4 +11,5 @@ public class ContractDto {
     private String counterpartyName;
     private LocalDate agreedDeliveryDate;
     private BigDecimal baseContractValue;
+    private String status;
 }
