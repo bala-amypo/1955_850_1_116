@@ -1,51 +1,55 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Contract;
+import com.example.demo.entity.ContractStatus;
+import com.example.demo.entity.DeliveryRecord;
 import com.example.demo.repository.ContractRepository;
-import com.example.demo.service.ContractService;
+import com.example.demo.repository.DeliveryRecordRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
-@Transactional
-public class ContractServiceImpl implements ContractService {
-    
+@RequiredArgsConstructor
+public class ContractServiceImpl {
     private final ContractRepository contractRepository;
-    
-    public ContractServiceImpl(ContractRepository contractRepository) {
-        this.contractRepository = contractRepository;
-    }
-    
-    @Override
+    private final DeliveryRecordRepository deliveryRecordRepository;
+
     public Contract createContract(Contract contract) {
+        if (contract.getBaseContractValue().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Base contract value must be positive");
+        }
         return contractRepository.save(contract);
     }
-    
-    @Override
+
     public Contract getContractById(Long id) {
         return contractRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Contract not found with id: " + id));
+            .orElseThrow(() -> new ResourceNotFoundException("Contract not found: " + id));
     }
-    
-    @Override
-    public List<Contract> getAllContracts() {
-        return contractRepository.findAll();
-    }
-    
-    @Override
-    public Contract updateContract(Long id, Contract contract) {
+
+    public Contract updateContract(Long id, Contract updated) {
         Contract existing = getContractById(id);
-        existing.setTitle(contract.getTitle());
-        existing.setCounterpartyName(contract.getCounterpartyName());
-        existing.setAgreedDeliveryDate(contract.getAgreedDeliveryDate());
-        existing.setBaseContractValue(contract.getBaseContractValue());
-        existing.setStatus(contract.getStatus());
+        existing.setTitle(updated.getTitle());
+        existing.setCounterpartyName(updated.getCounterpartyName());
+        existing.setAgreedDeliveryDate(updated.getAgreedDeliveryDate());
+        existing.setBaseContractValue(updated.getBaseContractValue());
         return contractRepository.save(existing);
     }
-    
-    @Override
-    public void deleteContract(Long id) {
-        contractRepository.deleteById(id);
+
+    public void updateContractStatus(Long contractId) {
+        Contract contract = getContractById(contractId);
+        var latestDelivery = deliveryRecordRepository.findFirstByContractIdOrderByDeliveryDateDesc(contractId);
+        if (latestDelivery.isEmpty()) {
+            contract.setStatus(ContractStatus.ACTIVE);
+        } else if (latestDelivery.get().getDeliveryDate().isAfter(contract.getAgreedDeliveryDate())) {
+            contract.setStatus(ContractStatus.BREACHED);
+        }
+        contractRepository.save(contract);
+    }
+
+    public List<Contract> getAllContracts() {
+        return contractRepository.findAll();
     }
 }
