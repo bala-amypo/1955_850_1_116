@@ -23,7 +23,7 @@ public class OpenApiConfig {
                 .description("API for managing contracts, deliveries, breach rules, and penalty calculations"))
             .servers(List.of(
                 new Server().url("http://localhost:8080").description("Local Development Server"),
-                new Server().url("https://9083.pro604cr.amypo.ai/").description("Production Server")
+                new Server().url("https://9256.408procr.amypo.ai/").description("Production Server")
             ))
             .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME))
             .components(new io.swagger.v3.oas.models.Components()
