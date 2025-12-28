@@ -12,31 +12,30 @@ import java.util.Set;
 @Component
 public class JwtTokenProvider {
 
-    private static final String jwtSecret =
-            "mySecretKeyThatIsLongEnoughForJWTSecurityWithHS256Algorithm1234567890";
+    private static final String JWT_SECRET =
+            "MySuperSecureJwtSecretKeyForHS256Algorithm1234567890123456";
 
-    private static final Long jwtExpirationMs = 86400000L;
+    private static final long JWT_EXPIRATION_MS = 86400000L;
 
     private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+        return Keys.hmacShaKeyFor(JWT_SECRET.getBytes(StandardCharsets.UTF_8));
     }
 
-    // ✅ THIS METHOD IS REQUIRED BY TESTS
     public String generateToken(Long userId, String email, String rolesCsv) {
-        Date expiryDate = new Date(System.currentTimeMillis() + jwtExpirationMs);
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION_MS);
 
         return Jwts.builder()
                 .setSubject(email)
                 .claim("userId", userId)
                 .claim("email", email)
                 .claim("roles", rolesCsv)
-                .setIssuedAt(new Date())
+                .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // Optional (for actual app usage)
     public String generateToken(Long userId, String email, Set<String> roles) {
         String rolesCsv = String.join(",", roles);
         return generateToken(userId, email, rolesCsv);
@@ -49,7 +48,7 @@ public class JwtTokenProvider {
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch (JwtException | IllegalArgumentException e) {
+        } catch (Exception e) {
             return false;
         }
     }
